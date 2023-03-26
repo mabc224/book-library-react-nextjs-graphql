@@ -11,8 +11,8 @@ export default function Document () {
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
    </Head>
    <body>
-   <div className="h-screen flex flex-col">
-    <div className="shadow z-10">
+   <div className="flex flex-col">
+    <div className="shadow border-b-2">
 
      <header>
       <Navbar/>
