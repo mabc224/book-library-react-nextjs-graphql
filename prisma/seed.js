@@ -22,7 +22,7 @@ async function main () {
  })
 
  const generatedBooks = []
- for (let i = 0; i < 100; i++) {
+ for (let i = 0; i < 200; i++) {
   const data = {
    title: faker.commerce.productName(),
    author: faker.name.fullName(),
