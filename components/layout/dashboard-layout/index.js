@@ -9,7 +9,7 @@ const initTabs = [
 
 export default function DashboardLayout({children}) {
  return (
-  <div className="relative h-screen bg-gray-100">
+  <div className="relative bg-gray-100">
    <div className="bg-white py-6">
     <div className="xl:container mx-auto px-3 sm:px-4 xl:px-2">
      <div className="flex flex-row flex-wrap">
