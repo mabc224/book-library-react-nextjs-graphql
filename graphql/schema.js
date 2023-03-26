@@ -26,6 +26,7 @@ export const typeDefs = `
 
   type Query {
     userBooks(userId: ID!, collection: Collection!): [Book]
+    userBook(userId: ID!, bookId: ID!): Book
   }
   
   type Mutation {
