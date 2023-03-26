@@ -21,6 +21,10 @@
     "@prisma/client": "^4.11.0",
     "eslint": "8.36.0",
     "eslint-config-next": "13.2.4",
+    "graphql": "^16.6.0",
+    "graphql-middleware": "^6.1.33",
+    "graphql-scalars": "^1.21.2",
+    "graphql-yoga": "^3.7.3",
     "next": "13.2.4",
     "react": "18.2.0",
     "react-dom": "18.2.0"
