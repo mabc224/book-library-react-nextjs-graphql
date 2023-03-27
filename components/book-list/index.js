@@ -54,7 +54,7 @@ export default function BookList ({data, collectionType = ''}) {
                  className="flex-shrink max-w-full w-full sm:w-1/3 lg:w-1/4 px-3 pb-3 pt-3 sm:pt-0 border-b-2 sm:border-b-0 border-dotted border-gray-100">
      <div className="flex flex-row sm:block hover-img">
       <Link href={`/book/edit/${book.bookId}`}>
-       <img className="max-w-full	w-full mx-auto object-contain sm:h-24 h-48" src="/next.svg" alt="book title"/>
+       <img className="max-w-full	w-full mx-auto object-contain sm:h-24 h-48" src={`${book.cover ? `/uploads/${book.cover}` : '/default-image.svg' }`} alt="book title"/>
       </Link>
       <div className="py-0 sm:py-3 pl-3 sm:pl-0">
        <h3 className="text-lg font-bold leading-tight mb-2">

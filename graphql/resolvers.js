@@ -19,11 +19,12 @@ export const resolvers = {
  Mutation: {
   addBook: async (_, args) => {
    const {title, author, file, date, collection} = args
-   let filePath = '';
+   let fileName = '';
    try {
     if (file) {
      const {name, type, blobParts} = await file
-     filePath = path.join(process.cwd(), 'public', 'uploads', name)
+     fileName = name;
+     const filePath = path.join(process.cwd(), 'public', 'uploads', name)
      const blob = new Blob(blobParts, {
       type
      })
@@ -35,16 +36,18 @@ export const resolvers = {
     console.log(e)
    }
 
-   return prisma.book.create({data: {title, author, date: new Date(date), collection, userId: 1, cover: filePath}})
+   return prisma.book.create({data: {title, author, date: new Date(date), collection, userId: 1, cover: fileName}})
   },
   modifyBook: async (_, args) => {
    const {bookId, title, author, file, date, collection, rating} = args
    const existingRow = await prisma.book.findFirst({where: {bookId: parseInt(bookId, 10)}})
-   let filePath = existingRow.cover || '';
+   let fileName = existingRow.cover || '';
+
    try {
     if (file) {
      const {name, type, blobParts} = await file
-     filePath = path.join(process.cwd(), 'public', 'uploads', name)
+     fileName = name;
+     const filePath = path.join(process.cwd(), 'public', 'uploads', name)
      const blob = new Blob(blobParts, {
       type
      })
@@ -58,7 +61,7 @@ export const resolvers = {
 
    return prisma.book.update({
     where: {bookId: parseInt(bookId, 10)},
-    data: {title, author, date: new Date(date), collection, rating, cover: filePath}
+    data: {title, author, date: new Date(date), collection, rating, cover: fileName}
    })
   },
 

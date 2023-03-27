@@ -26,7 +26,7 @@ async function main () {
   const data = {
    title: faker.commerce.productName(),
    author: faker.name.fullName(),
-   cover: faker.image.nature(),
+   cover: '',
    date: faker.date.recent(),
    collection: faker.helpers.arrayElement(['READ', 'READING', 'WANT_TO_READ']),
    userId: faker.helpers.arrayElement(Array.from({length: 10}, (_, i) => i + 1)),
