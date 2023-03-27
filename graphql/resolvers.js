@@ -1,6 +1,7 @@
 import { DateResolver } from 'graphql-scalars'
+import fs from 'fs/promises'
 import path from 'path'
-import fs from 'fs'
+import { Blob } from 'buffer'
 import prisma from '@/lib/prisma'
 
 export const resolvers = {
@@ -16,14 +17,49 @@ export const resolvers = {
   },
  },
  Mutation: {
-  addBook: (_, args) => {
+  addBook: async (_, args) => {
    const {title, author, file, date, collection} = args
-   console.log('File: ', file)
-   return prisma.book.create({data: {title, author, date: new Date(date), collection, userId: 1}})
+   let filePath = '';
+   try {
+    if (file) {
+     const {name, type, blobParts} = await file
+     filePath = path.join(process.cwd(), 'public', 'uploads', name)
+     const blob = new Blob(blobParts, {
+      type
+     })
+
+     const buffer = Buffer.from(await blob.arrayBuffer())
+     await fs.writeFile(filePath, buffer)
+    }
+   } catch (e) {
+    console.log(e)
+   }
+
+   return prisma.book.create({data: {title, author, date: new Date(date), collection, userId: 1, cover: filePath}})
   },
   modifyBook: async (_, args) => {
    const {bookId, title, author, file, date, collection, rating} = args
-   return prisma.book.update({where: {bookId: parseInt(bookId, 10)}, data: {title, author, date: new Date(date), collection, rating}})
+   const existingRow = await prisma.book.findFirst({where: {bookId: parseInt(bookId, 10)}})
+   let filePath = existingRow.cover || '';
+   try {
+    if (file) {
+     const {name, type, blobParts} = await file
+     filePath = path.join(process.cwd(), 'public', 'uploads', name)
+     const blob = new Blob(blobParts, {
+      type
+     })
+
+     const buffer = Buffer.from(await blob.arrayBuffer())
+     await fs.writeFile(filePath, buffer)
+    }
+   } catch (e) {
+    console.log(e)
+   }
+
+   return prisma.book.update({
+    where: {bookId: parseInt(bookId, 10)},
+    data: {title, author, date: new Date(date), collection, rating, cover: filePath}
+   })
   },
 
  }

@@ -3,7 +3,7 @@ import Select from 'react-select'
 import { useForm, Controller } from 'react-hook-form'
 import { gql, useMutation } from '@apollo/client'
 import toast, { Toaster } from 'react-hot-toast'
-import ReactStars from "react-rating-stars-component";
+import ReactStars from 'react-rating-stars-component'
 import apolloClient from '@/lib/apollo-client'
 
 const options = [
@@ -37,8 +37,8 @@ const ModifyBookMutation = gql`
 
 export default function Edit (props) {
  const router = useRouter()
- const { bookId } = router.query
- const {userBook} = props;
+ const {bookId} = router.query
+ const {userBook} = props
 
  const {control, handleSubmit, reset} = useForm({
   defaultValues: {
@@ -48,22 +48,22 @@ export default function Edit (props) {
    date: userBook.date,
    file: '',
    collection: {label: userBook.collection.split('_'), value: userBook.collection},
-   rating: 0
+   rating: userBook.rating
   }
  })
 
- const [modifyBook, { loading, error }] = useMutation(ModifyBookMutation, {
+ const [modifyBook, {loading, error}] = useMutation(ModifyBookMutation, {
   onCompleted: () => {
    reset()
    router.push('/want-to-read')
   }
  })
  const onSubmit = data => {
-  const { bookId, title, author, file, date, collection, rating} = data;
-  const variables = {bookId, title, author, file, date, collection: collection.value, rating};
+  const {bookId, title, author, file, date, collection, rating} = data
+  const variables = {bookId, title, author, file, date, collection: collection.value, rating}
 
   try {
-   toast.promise(modifyBook({ variables }), {
+   toast.promise(modifyBook({variables}), {
     loading: 'Modifying book..',
     success: 'Book successfully modified!🎉',
     error: `Something went wrong 😥 Please try again -  ${error}`,
@@ -79,7 +79,7 @@ export default function Edit (props) {
     <div className="relative flex flex-col justify-center">
      <div
       className="w-full p-6 m-auto bg-white rounded-md lg:max-w-xl">
-      <Toaster />
+      <Toaster/>
       <h1 className="text-3xl font-semibold text-center text-indigo-700 underline uppercase decoration-wavy">
        Edit Book
       </h1>
@@ -93,7 +93,7 @@ export default function Edit (props) {
         </label>
         <Controller
          name="title"
-         rules={{ required: true }}
+         rules={{required: true}}
          control={control}
          render={({field}) => <input {...field}
                                      type="text"
@@ -111,7 +111,7 @@ export default function Edit (props) {
         </label>
         <Controller
          name="author"
-         rules={{ required: true }}
+         rules={{required: true}}
          control={control}
          render={({field}) => <input {...field}
                                      type="text"
@@ -145,81 +145,81 @@ export default function Edit (props) {
         <Controller
          name="file"
          control={control}
-         render={({field}) => <input {...field}
-                                     type="file"
-                                     className="block w-full px-4 py-2 mt-2 text-indigo-700 bg-white border rounded-md focus:border-indigo-400 focus:ring-indigo-300 focus:outline-none focus:ring focus:ring-opacity-40"
-         />}
-        />
-       </div>
-       <div className="mb-2">
-        <label
-         className="block text-sm font-semibold text-gray-800"
-        >
-         Collection
-        </label>
-        <Controller
-         name="collection"
-         control={control}
-         render={({field}) => <Select {...field} instanceId="collection-select-options" options={options}
-                                      className="block w-full px-4 py-2 mt-2 text-indigo-700 bg-white border rounded-md focus:border-indigo-400 focus:ring-indigo-300 focus:outline-none focus:ring focus:ring-opacity-40">
-         </Select>}
-        />
+         render={({field: {onChange}}) => <input onChange={(e) => {onChange(e.target.files[0])}}
+          type='file' name='file'
+          className='block w-full px-4 py-2 mt-2 text-indigo-700 bg-white border rounded-md focus:border-indigo-400 focus:ring-indigo-300 focus:outline-none focus:ring focus:ring-opacity-40'
+          />}
+         />
+          </div>
+          <div className="mb-2">
+          <label
+          className="block text-sm font-semibold text-gray-800"
+          >
+          Collection
+          </label>
+          <Controller
+          name="collection"
+          control={control}
+          render={({field}) => <Select {...field} instanceId="collection-select-options" options={options}
+          className="block w-full px-4 py-2 mt-2 text-indigo-700 bg-white border rounded-md focus:border-indigo-400 focus:ring-indigo-300 focus:outline-none focus:ring focus:ring-opacity-40">
+          </Select>}
+          />
 
-       </div>
-       <div className="mb-2">
-        <label
-         className="block text-sm font-semibold text-gray-800"
-        >
-         Rating
-        </label>
-        <Controller
-         name="rating"
-         control={control}
-         render={({field}) => <ReactStars {...field} count={5}
+          </div>
+          <div className="mb-2">
+          <label
+          className="block text-sm font-semibold text-gray-800"
+          >
+          Rating
+          </label>
+          <Controller
+          name="rating"
+          control={control}
+          render={({field}) => <ReactStars {...field} count={5}
           size={24}
           activeColor="#ffd700"
-         />}
-        />
+          />}
+          />
 
-       </div>
-       <div className="mt-6">
-        <button type="submit"
-                className="w-full px-4 py-2 tracking-wide text-white transition-colors duration-200 transform bg-indigo-700 rounded-md hover:bg-indigo-600 focus:outline-none focus:bg-indigo-600">
-         Update
-        </button>
-       </div>
-      </form>
-     </div>
-    </div>
-   </div>
-  </div>
- )
-}
+          </div>
+          <div className="mt-6">
+          <button type="submit"
+          className="w-full px-4 py-2 tracking-wide text-white transition-colors duration-200 transform bg-indigo-700 rounded-md hover:bg-indigo-600 focus:outline-none focus:bg-indigo-600">
+          Update
+          </button>
+          </div>
+          </form>
+          </div>
+          </div>
+          </div>
+          </div>
+          )
+         }
 
-const GET_USER_BOOK = gql`
-  query userBook($userId: ID!, $bookId: ID!) {
-    userBook(userId: $userId, bookId: $bookId) {
-      bookId
-      userId
-      title
-      author
-      date
-      rating
-      collection
-      cover
-    }
-  }
-`
+         const GET_USER_BOOK=gql`
+        query userBook($userId: ID!, $bookId: ID!) {
+        userBook(userId: $userId, bookId: $bookId) {
+        bookId
+        userId
+        title
+        author
+        date
+        rating
+        collection
+        cover
+       }
+       }
+        `
 
-export async function getServerSideProps(context) {
- const { bookId } = context.query;
- const { data } = await apolloClient.query({
-  query: GET_USER_BOOK,
-  variables: {userId: 1, bookId }
- })
- console.log(data?.userBook)
+        export async function getServerSideProps(context) {
+        const {bookId} = context.query;
+        const {data} = await apolloClient.query({
+        query: GET_USER_BOOK,
+        variables: {userId: 1, bookId}
+       })
+        console.log(data?.userBook)
 
-  return {
-  props: data, // will be passed to the page component as props
- }
-}
+        return {
+        props: data, // will be passed to the page component as props
+       }
+       }

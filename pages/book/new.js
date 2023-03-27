@@ -3,6 +3,7 @@ import Select from 'react-select'
 import { useForm, Controller } from 'react-hook-form'
 import { gql, useMutation } from '@apollo/client'
 import toast, { Toaster } from 'react-hot-toast'
+import { useState } from 'react'
 
 const options = [
  {value: 'READ', label: 'READ'},
@@ -49,9 +50,13 @@ export default function New () {
    router.push('/want-to-read')
   }
  })
+
+ const [fileData, setFileData] = useState();
+
  const onSubmit = data => {
-  const {title, author, file, date, collection, rating} = data;
-  const variables = {title, author, file, date, collection: collection.value, rating};
+  const {title, author, date, collection, rating} = data;
+  console.log(fileData)
+  const variables = {title, author, file: fileData, date, collection: collection.value, rating};
 
   try {
    toast.promise(addBook({ variables }), {
@@ -62,6 +67,11 @@ export default function New () {
   } catch (error) {
    console.error(error)
   }
+ }
+
+ const onChange = (e) => {
+  const file = e.target.files[0];
+  setFileData(file);
  }
 
  return (
@@ -133,13 +143,9 @@ export default function New () {
         >
          Cover
         </label>
-        <Controller
-         name="file"
-         control={control}
-         render={({field}) => <input {...field}
-                                     type="file"
-                                     className="block w-full px-4 py-2 mt-2 text-indigo-700 bg-white border rounded-md focus:border-indigo-400 focus:ring-indigo-300 focus:outline-none focus:ring focus:ring-opacity-40"
-         />}
+        <input onChange={onChange}
+               type="file"
+               className="block w-full px-4 py-2 mt-2 text-indigo-700 bg-white border rounded-md focus:border-indigo-400 focus:ring-indigo-300 focus:outline-none focus:ring focus:ring-opacity-40"
         />
        </div>
        <div className="mb-2">

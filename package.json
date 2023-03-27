@@ -20,6 +20,7 @@
   "dependencies": {
     "@apollo/client": "^3.7.10",
     "@prisma/client": "^4.11.0",
+    "apollo-upload-client": "^17.0.0",
     "eslint": "8.36.0",
     "eslint-config-next": "13.2.4",
     "graphql": "^16.6.0",
