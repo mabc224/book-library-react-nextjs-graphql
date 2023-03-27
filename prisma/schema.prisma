@@ -11,9 +11,11 @@ datasource db {
 }
 
 model User {
-  userId Int     @id @default(autoincrement())
-  name   String?
-  books  Book[]
+  userId   Int     @id @default(autoincrement())
+  name     String?
+  username String  @db.VarChar(255)
+  password String  @db.VarChar(255)
+  books    Book[]
 }
 
 enum Collection {
@@ -33,5 +35,5 @@ model Book {
   collection Collection @default(WANT_TO_READ)
   createdAt  DateTime   @default(now())
   updatedAt  DateTime   @updatedAt
-  rating     Int        @db.SmallInt @default(0)
+  rating     Int        @default(0) @db.SmallInt
 }

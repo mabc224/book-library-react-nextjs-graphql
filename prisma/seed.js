@@ -5,8 +5,11 @@
  */
 const {PrismaClient} = require('@prisma/client')
 const {faker} = require('@faker-js/faker')
+const bcrypt = require('bcryptjs')
 
 const prisma = new PrismaClient()
+
+const hashedPassword = bcrypt.hashSync('password', 8)
 
 async function main () {
 
@@ -14,6 +17,8 @@ async function main () {
  for (let i = 0; i < 10; i++) {
   const data = {
    name: faker.name.fullName(),
+   username: `user${i}`,
+   password: hashedPassword
   }
   generatedUsers.push(data)
  }
