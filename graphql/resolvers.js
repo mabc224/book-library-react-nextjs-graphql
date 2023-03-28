@@ -1,10 +1,12 @@
 import { DateResolver } from 'graphql-scalars'
+import { GraphQLError } from 'graphql'
 import fs from 'fs/promises'
 import path from 'path'
 import bcryptjs from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 import { Blob } from 'buffer'
 import prisma from '@/lib/prisma'
+import { getUserId } from '@/utils'
 
 const APP_SECRET = process.env.APP_SECRET
 
@@ -74,7 +76,7 @@ export const resolvers = {
    const existingRow = await prisma.user.findFirst({where: {username}})
 
    if (existingRow) {
-    throw new Error('Username already exists, Choose new one.')
+    throw new GraphQLError('Username already exists, Choose new one.')
    }
 
    const user = await prisma.user.create({
@@ -98,12 +100,12 @@ export const resolvers = {
    const userRow = await prisma.user.findFirst({where: {username}})
 
    if (!userRow) {
-    throw new Error('Username not found')
+    throw new GraphQLError('Username not found')
    }
 
    const valid = await bcryptjs.compare(password, userRow.password)
    if (!valid) {
-    throw new Error('Invalid password')
+    throw new GraphQLError('Invalid password')
    }
 
    const token = jwt.sign({userId: userRow.userId}, APP_SECRET)

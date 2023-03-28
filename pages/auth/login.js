@@ -5,7 +5,7 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import * as Yup from 'yup'
 import { gql, useMutation } from '@apollo/client'
 import toast, { Toaster } from 'react-hot-toast'
-import { AUTH_TOKEN, USER } from '@/constants'
+import { useAuthToken } from '@/hooks/auth.hooks'
 
 const SignInMutation = gql`
   mutation SignInMutation(
@@ -28,6 +28,7 @@ const SignInMutation = gql`
 
 export default function Signup () {
  const router = useRouter()
+ const {setAuthToken, setUserData} = useAuthToken();
 
  const formSchema = Yup.object().shape({
   username: Yup.string().lowercase().trim()
@@ -51,8 +52,8 @@ export default function Signup () {
  const [signup, {loading, error}] = useMutation(SignInMutation, {
   onCompleted: (data) => {
    reset()
-   localStorage.setItem(AUTH_TOKEN, data?.login.token)
-   localStorage.setItem(USER, JSON.stringify(data?.login.user))
+   setAuthToken(data?.login.token)
+   setUserData(JSON.stringify(data?.login.user))
    router.push('/want-to-read')
   }
  })
