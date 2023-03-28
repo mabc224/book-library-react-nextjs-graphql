@@ -1,8 +1,12 @@
 import { DateResolver } from 'graphql-scalars'
 import fs from 'fs/promises'
 import path from 'path'
+import bcryptjs from 'bcryptjs'
+import jwt from 'jsonwebtoken'
 import { Blob } from 'buffer'
 import prisma from '@/lib/prisma'
+
+const APP_SECRET = process.env.APP_SECRET
 
 export const resolvers = {
  Date: DateResolver,
@@ -19,11 +23,11 @@ export const resolvers = {
  Mutation: {
   addBook: async (_, args) => {
    const {title, author, file, date, collection} = args
-   let fileName = '';
+   let fileName = ''
    try {
     if (file) {
      const {name, type, blobParts} = await file
-     fileName = name;
+     fileName = name
      const filePath = path.join(process.cwd(), 'public', 'uploads', name)
      const blob = new Blob(blobParts, {
       type
@@ -41,12 +45,12 @@ export const resolvers = {
   modifyBook: async (_, args) => {
    const {bookId, title, author, file, date, collection, rating} = args
    const existingRow = await prisma.book.findFirst({where: {bookId: parseInt(bookId, 10)}})
-   let fileName = existingRow.cover || '';
+   let fileName = existingRow.cover || ''
 
    try {
     if (file) {
      const {name, type, blobParts} = await file
-     fileName = name;
+     fileName = name
      const filePath = path.join(process.cwd(), 'public', 'uploads', name)
      const blob = new Blob(blobParts, {
       type
@@ -64,7 +68,33 @@ export const resolvers = {
     data: {title, author, date: new Date(date), collection, rating, cover: fileName}
    })
   },
+  signup: async (_, args) => {
+   const {name, username, password} = args
 
+   const existingRow = await prisma.user.findFirst({where: {username}})
+
+   if (existingRow) {
+    throw new Error('Username already exists, Choose new one.')
+   }
+
+   const user = await prisma.user.create({
+    data: {
+     username,
+     password: bcryptjs.hashSync(password, 8),
+     name,
+    },
+   })
+
+   const token = jwt.sign({userId: user.userId}, APP_SECRET)
+
+   return {
+    token,
+    user,
+   }
+  },
+  login: (_, args) => {
+
+  },
  }
 }
 

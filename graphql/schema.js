@@ -5,6 +5,7 @@ export const typeDefs = `
   type User {
     userId: ID
     name: String!
+    username: String!
   }
   
   enum Collection {
@@ -23,6 +24,11 @@ export const typeDefs = `
     rating: Int
     collection: Collection
   }
+  
+  type AuthUser {
+    token: String!
+    user: User!
+  }
 
   type Query {
     userBooks(userId: ID!, collection: Collection!): [Book]
@@ -32,5 +38,7 @@ export const typeDefs = `
   type Mutation {
     addBook(title: String!, author: String!, file: File, date: String!, collection: Collection): Book!
     modifyBook(bookId: ID!, title: String, author: String, file: File, date: String, collection: Collection, rating: Int): Book!
+    login(username: String!, password: String!): AuthUser
+    signup(name: String!, username: String!, password: String!): AuthUser
   }
 `

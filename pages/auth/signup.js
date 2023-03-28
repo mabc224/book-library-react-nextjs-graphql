@@ -3,12 +3,37 @@ import { useForm, Controller } from 'react-hook-form'
 import { useRouter } from 'next/router'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as Yup from 'yup'
+import { gql, useMutation } from '@apollo/client'
+import toast, { Toaster } from 'react-hot-toast'
+import { AUTH_TOKEN, USER } from '@/constants'
+
+const SignUpMutation = gql`
+  mutation SignUpMutation(
+    $name: String!
+    $username: String!
+    $password: String!
+  ) {
+    signup(
+      name: $name
+      username: $username
+      password: $password
+    ) {
+      token
+      user{
+        name
+        username
+        userId
+      }
+    }
+  }
+`
 
 export default function Signup () {
  const router = useRouter()
 
  const formSchema = Yup.object().shape({
-  username: Yup.string()
+  name: Yup.string().required('Name is mandatory'),
+  username: Yup.string().lowercase().trim()
    .required('Username is mandatory')
    .min(3, 'Username must be at 3 char long'),
   password: Yup.string()
@@ -21,6 +46,7 @@ export default function Signup () {
  const formOptions = {
   resolver: yupResolver(formSchema),
   defaultValues: {
+   name: '',
    username: '',
    password: '',
    confirmPwd: ''
@@ -30,12 +56,34 @@ export default function Signup () {
  const {control, handleSubmit, reset, formState} = useForm(formOptions)
  const {errors} = formState
 
+ const [signup, {loading, error}] = useMutation(SignUpMutation, {
+  onCompleted: (data) => {
+   console.log(data)
+   reset()
+   localStorage.setItem(AUTH_TOKEN, data?.signup.token)
+   localStorage.setItem(USER, JSON.stringify(data?.signup.user))
+   router.push('/want-to-read')
+  }
+ })
+
  const onSubmit = data => {
   console.log(data)
+  const {name, username, password} = data
+  const variables = {name, username, password}
+  try {
+   toast.promise(signup({variables}), {
+    loading: 'Signing up..',
+    success: 'Signup successfully!🎉',
+    error: `Something went wrong 😥 Please try again -  ${error}`,
+   })
+  } catch (error) {
+   console.error(error)
+  }
  }
 
  return (
   <section className="bg-gray-50 dark:bg-gray-900">
+   <Toaster/>
    <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
     <div
      className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
@@ -44,6 +92,19 @@ export default function Signup () {
        Sign up
       </h1>
       <form className="space-y-4 md:space-y-6" onSubmit={handleSubmit(onSubmit)}>
+       <div>
+        <label htmlFor="name" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your
+         name</label>
+        <Controller
+         name="name"
+         rules={{required: true}}
+         control={control}
+         render={({field}) => <input {...field} type="text" id="name"
+                                     className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                     placeholder="John"/>}
+        />
+        <span className="text-sm text-red-600">{errors.name?.message}</span>
+       </div>
        <div>
         <label htmlFor="username" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your
          username</label>
