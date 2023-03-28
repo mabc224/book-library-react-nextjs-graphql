@@ -3,17 +3,16 @@ import { GraphQLError } from 'graphql'
 import fs from 'fs/promises'
 import path from 'path'
 import bcryptjs from 'bcryptjs'
-import jwt from 'jsonwebtoken'
+import { SignJWT } from 'jose'
 import { Blob } from 'buffer'
 import prisma from '@/lib/prisma'
-import { getUserId } from '@/utils'
 
 const APP_SECRET = process.env.APP_SECRET
 
 export const resolvers = {
  Date: DateResolver,
  Query: {
-  userBooks: (_, args) => {
+  userBooks: (_, args, context) => {
    const {userId, collection} = args
    return prisma.book.findMany({where: {userId: parseInt(userId, 10), collection}})
   },
@@ -87,7 +86,10 @@ export const resolvers = {
     },
    })
 
-   const token = jwt.sign({userId: user.userId}, APP_SECRET)
+   const token = await new SignJWT({userId: userRow.userId})
+    .setProtectedHeader({alg: 'HS256'})
+    .setExpirationTime('999h')
+    .sign(new TextEncoder().encode(APP_SECRET))
 
    return {
     token,
@@ -108,7 +110,12 @@ export const resolvers = {
     throw new GraphQLError('Invalid password')
    }
 
-   const token = jwt.sign({userId: userRow.userId}, APP_SECRET)
+   const token = await new SignJWT({userId: userRow.userId})
+    .setProtectedHeader({alg: 'HS256'})
+    .setExpirationTime('999h')
+    .sign(new TextEncoder().encode(APP_SECRET))
+
+   // const token = await SignJWT({userId: userRow.userId}, APP_SECRET, {expiresIn: '999h'})
 
    return {
     token,

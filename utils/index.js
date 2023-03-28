@@ -1,9 +1,10 @@
-const jwt = require('jsonwebtoken')
+import { jwtVerify } from 'jose'
 
 const APP_SECRET = process.env.APP_SECRET
 
-export const getTokenPayload = (token) => {
- return jwt.verify(token, APP_SECRET)
+export const getTokenPayload = async (token) => {
+ const secret = new TextEncoder().encode(APP_SECRET)
+ return jwtVerify(token, secret)
 }
 
 export const getUserId = (req, authToken) => {
