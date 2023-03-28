@@ -92,8 +92,26 @@ export const resolvers = {
     user,
    }
   },
-  login: (_, args) => {
+  login: async (_, args) => {
+   const {username, password} = args
 
+   const userRow = await prisma.user.findFirst({where: {username}})
+
+   if (!userRow) {
+    throw new Error('Username not found')
+   }
+
+   const valid = await bcryptjs.compare(password, userRow.password)
+   if (!valid) {
+    throw new Error('Invalid password')
+   }
+
+   const token = jwt.sign({userId: userRow.userId}, APP_SECRET)
+
+   return {
+    token,
+    user: userRow,
+   }
   },
  }
 }
