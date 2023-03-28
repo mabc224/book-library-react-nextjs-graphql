@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev -p 8888",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
@@ -19,8 +19,10 @@
   },
   "dependencies": {
     "@apollo/client": "^3.7.10",
+    "@hookform/resolvers": "^3.0.0",
     "@prisma/client": "^4.11.0",
     "apollo-upload-client": "^17.0.0",
+    "bcryptjs": "^2.4.3",
     "eslint": "8.36.0",
     "eslint-config-next": "13.2.4",
     "graphql": "^16.6.0",
@@ -33,7 +35,8 @@
     "react-hook-form": "^7.43.8",
     "react-hot-toast": "^2.4.0",
     "react-rating-stars-component": "^2.2.0",
-    "react-select": "^5.7.2"
+    "react-select": "^5.7.2",
+    "yup": "^1.0.2"
   },
   "devDependencies": {
     "@faker-js/faker": "^7.6.0",

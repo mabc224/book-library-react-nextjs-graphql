@@ -55,7 +55,6 @@ export default function New () {
 
  const onSubmit = data => {
   const {title, author, date, collection, rating} = data;
-  console.log(fileData)
   const variables = {title, author, file: fileData, date, collection: collection.value, rating};
 
   try {
