@@ -58,7 +58,6 @@ export default function Signup () {
 
  const [signup, {loading, error}] = useMutation(SignUpMutation, {
   onCompleted: (data) => {
-   console.log(data)
    reset()
    localStorage.setItem(AUTH_TOKEN, data?.signup.token)
    localStorage.setItem(USER, JSON.stringify(data?.signup.user))
@@ -67,7 +66,6 @@ export default function Signup () {
  })
 
  const onSubmit = data => {
-  console.log(data)
   const {name, username, password} = data
   const variables = {name, username, password}
   try {
