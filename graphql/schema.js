@@ -32,7 +32,7 @@ export const typeDefs = `
 
   type Query {
     userBooks(collection: Collection!): [Book]
-    userBook(userId: ID!, bookId: ID!): Book
+    userBook(bookId: ID!): Book
   }
   
   type Mutation {

@@ -14,18 +14,23 @@ export const resolvers = {
  Query: {
   userBooks: (_, args, context) => {
    const {collection} = args
-   const {userId} = context;
+   const {userId} = context
    return prisma.book.findMany({where: {userId, collection}})
   },
-  userBook: (_, args) => {
-   const {userId, bookId} = args
-   return prisma.book.findFirst({where: {userId: parseInt(userId, 10), bookId: parseInt(bookId, 10)}})
+  userBook: async (_, args, context) => {
+   const {bookId} = args
+   const {userId} = context
+   const userBookRow = await prisma.book.findFirst({where: {userId, bookId: parseInt(bookId, 10)}})
+   if (userBookRow) {
+    return userBookRow
+   }
+   throw new GraphQLError('Selected Book does not belong to you')
   },
  },
  Mutation: {
-  addBook: async (_, args,context) => {
+  addBook: async (_, args, context) => {
    const {title, author, file, date, collection} = args
-   const {userId} = context;
+   const {userId} = context
    let fileName = ''
    try {
     if (file) {
@@ -45,9 +50,13 @@ export const resolvers = {
 
    return prisma.book.create({data: {title, author, date: new Date(date), collection, userId, cover: fileName}})
   },
-  modifyBook: async (_, args) => {
+  modifyBook: async (_, args, context) => {
    const {bookId, title, author, file, date, collection, rating} = args
-   const existingRow = await prisma.book.findFirst({where: {bookId: parseInt(bookId, 10)}})
+   const {userId} = context
+   const existingRow = await prisma.book.findFirst({where: {userId, bookId: parseInt(bookId, 10)}})
+   if (!existingRow) {
+    return null
+   }
    let fileName = existingRow.cover || ''
 
    try {
