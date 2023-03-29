@@ -4,22 +4,22 @@ const APP_SECRET = process.env.APP_SECRET
 
 export const getTokenPayload = async (token) => {
  const secret = new TextEncoder().encode(APP_SECRET)
- return jwtVerify(token, secret)
+ return jwtVerify(token, secret, {algorithms: ['HS256']})
 }
 
-export const getUserId = (req, authToken) => {
+export const getUserId = async (req, authToken) => {
  if (req) {
-  const authHeader = req.headers.authorization
+  const authHeader = req.headers.authorization || req.headers.get('authorization')
   if (authHeader) {
    const token = authHeader.replace('Bearer ', '')
    if (!token) {
     throw new Error('No token found')
    }
-   const {userId} = getTokenPayload(token)
+   const {payload: {userId}} = await getTokenPayload(token)
    return userId
   }
  } else if (authToken) {
-  const {userId} = getTokenPayload(authToken)
+  const {payload: {userId}} = await getTokenPayload(authToken)
   return userId
  }
 
