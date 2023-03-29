@@ -115,8 +115,6 @@ export const resolvers = {
     .setExpirationTime('999h')
     .sign(new TextEncoder().encode(APP_SECRET))
 
-   // const token = await SignJWT({userId: userRow.userId}, APP_SECRET, {expiresIn: '999h'})
-
    return {
     token,
     user: userRow,
