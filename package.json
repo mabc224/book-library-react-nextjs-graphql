@@ -30,6 +30,7 @@
   },
   "dependencies": {
     "@apollo/client": "^3.7.10",
+    "@headlessui/react": "^1.7.13",
     "@hookform/resolvers": "^3.0.0",
     "@prisma/client": "^4.11.0",
     "apollo-upload-client": "^17.0.0",
@@ -48,6 +49,7 @@
     "react-dom": "18.2.0",
     "react-hook-form": "^7.43.8",
     "react-hot-toast": "^2.4.0",
+    "react-intl": "^6.3.2",
     "react-rating-stars-component": "^2.2.0",
     "react-select": "^5.7.2",
     "universal-cookie": "^4.0.4",

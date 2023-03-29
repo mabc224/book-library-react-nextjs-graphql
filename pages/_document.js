@@ -11,21 +11,7 @@ export default function Document () {
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
    </Head>
    <body>
-   <div className="flex flex-col">
-    <div className="shadow border-b-2">
-
-     <header>
-      <Navbar/>
-     </header>
-
-    </div>
-    <div className="h-full flex overflow-hidden">
-     <main className="overflow-y-auto focus:outline-none w-full z-0 bg-gray-100">
-      <Main/>
-     </main>
-    </div>
-   </div>
-
+   <Main/>
    <NextScript/>
    </body>
   </Html>
