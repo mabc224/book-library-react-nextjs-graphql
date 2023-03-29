@@ -13,8 +13,9 @@ export const resolvers = {
  Date: DateResolver,
  Query: {
   userBooks: (_, args, context) => {
-   const {userId, collection} = args
-   return prisma.book.findMany({where: {userId: parseInt(userId, 10), collection}})
+   const {collection} = args
+   const {userId} = context;
+   return prisma.book.findMany({where: {userId, collection}})
   },
   userBook: (_, args) => {
    const {userId, bookId} = args
@@ -22,8 +23,9 @@ export const resolvers = {
   },
  },
  Mutation: {
-  addBook: async (_, args) => {
+  addBook: async (_, args,context) => {
    const {title, author, file, date, collection} = args
+   const {userId} = context;
    let fileName = ''
    try {
     if (file) {
@@ -41,7 +43,7 @@ export const resolvers = {
     console.log(e)
    }
 
-   return prisma.book.create({data: {title, author, date: new Date(date), collection, userId: 1, cover: fileName}})
+   return prisma.book.create({data: {title, author, date: new Date(date), collection, userId, cover: fileName}})
   },
   modifyBook: async (_, args) => {
    const {bookId, title, author, file, date, collection, rating} = args

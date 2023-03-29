@@ -5,8 +5,8 @@ import DashboardLayout from '@/components/layout/dashboard-layout'
 import BookList from '@/components/book-list'
 
 const GET_USER_BOOKS = gql`
-  query userBooks($userId: ID!, $collection: Collection!) {
-    userBooks(userId: $userId, collection: $collection) {
+  query userBooks($collection: Collection!) {
+    userBooks(collection: $collection) {
       bookId
       userId
       title
@@ -21,7 +21,7 @@ const GET_USER_BOOKS = gql`
 export default function Read () {
  const [userBooks, setUserBooks] = useState([])
 
- const {data} = useQuery(GET_USER_BOOKS, {variables: {userId: 1, collection: 'READ'}})
+ const {data} = useQuery(GET_USER_BOOKS, {variables: {collection: 'READ'}})
 
  useEffect(() => {
   setUserBooks(data?.userBooks)

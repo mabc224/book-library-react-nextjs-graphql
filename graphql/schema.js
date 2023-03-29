@@ -31,7 +31,7 @@ export const typeDefs = `
   }
 
   type Query {
-    userBooks(userId: ID!, collection: Collection!): [Book]
+    userBooks(collection: Collection!): [Book]
     userBook(userId: ID!, bookId: ID!): Book
   }
   
