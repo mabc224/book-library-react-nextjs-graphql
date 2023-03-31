@@ -73,7 +73,7 @@ export default function Signup () {
    toast.promise(signup({variables}), {
     loading: 'Signing up..',
     success: 'Signup successfully!🎉',
-    error: `Something went wrong 😥 Please try again -  ${error}`,
+    error: `Something went wrong 😥 Please try again`,
    })
   } catch (error) {
    console.error(error)
@@ -90,6 +90,7 @@ export default function Signup () {
       <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
        Sign up
       </h1>
+      <span className="text-md text-red-600">{error?.message}</span>
       <form className="space-y-4 md:space-y-6" onSubmit={handleSubmit(onSubmit)}>
        <div>
         <label htmlFor="name" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your

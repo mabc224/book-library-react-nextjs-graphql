@@ -7,7 +7,7 @@ import { typeDefs } from '@/graphql/schema'
 import { getTokenPayload, getUserId } from '@/utils'
 
 // Rules
-const isAuthenticated = rule({ cache: 'contextual' })(async (parent, args, ctx, info) => {
+const isAuthenticated = rule({cache: 'contextual'})(async (parent, args, ctx, info) => {
  console.log('isAuthenticated: ', ctx?.userId)
  // return ctx.userId !== null
  if (ctx.userId === null) {
@@ -30,7 +30,9 @@ const permissions = shield({
  Mutation: {
   addBook: isAuthenticated,
   modifyBook: isAuthenticated,
- },
+ }
+}, {
+ allowExternalErrors: true
 })
 
 export default createYoga({
