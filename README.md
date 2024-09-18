@@ -79,7 +79,6 @@ for the notification feature.
 
 👤 **Arsalan Bilal**
 
-* Website: https://www.linkedin.com/in/charsalanbilal/
 * Github: [@mabc224](https://github.com/mabc224)
 
 ## 🤝 Contributing
